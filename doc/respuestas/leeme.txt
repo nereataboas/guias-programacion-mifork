@@ -20,7 +20,6 @@ C++
 Python
 C#
 
-
 ## 3. Los paradigmas anteriores a la POO, ¿Qué es la **programación estructurada**? y, todavía mejor, ¿Qué es la **programación modular**?
 
 Programación estructurada: organiza el código usando estructuras de control como secuencia, selección (if) e iteración (while, for), evitando saltos incontrolados como goto.
