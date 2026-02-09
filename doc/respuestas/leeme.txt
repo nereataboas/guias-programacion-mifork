@@ -210,3 +210,185 @@ int main() {
 }
 
 Aquí this desaparece: se pasa explícitamente el struct como parámetro.
+
+
+# TEMA 2. Encapsulación
+
+## 1. En Programación Orientada a Objetos (POO), ¿Qué buscan la **encapsulación** y **la ocultación** de información? Enumera brevemente algunas ventajas de la ocultación de información.
+
+La encapsulación busca agrupar los datos de un objeto junto con los métodos que operan sobre ellos, controlando el acceso a esos datos.
+La ocultación de información consiste en impedir el acceso directo a los detalles internos de un objeto desde el exterior.
+
+Ventajas:
+Evita modificaciones incorrectas del estado interno.
+Reduce dependencias entre clases.
+Facilita el mantenimiento y la evolución del código.
+Permite cambiar la implementación sin afectar al uso.
+Ayuda a mantener las invariantes de clase.
+
+
+## 2. ¿Qué se entiende por la **interfaz pública** de un objeto o clase en POO? Describe brevemente cómo se relaciona con la ocultación de información.
+
+La interfaz pública es el conjunto de métodos y atributos accesibles desde fuera de la clase (public).
+Define qué puede hacer un objeto, pero no cómo lo hace.
+
+Se relaciona con la ocultación porque:
+Solo la interfaz pública es visible.
+La implementación interna queda oculta (private).
+El usuario de la clase no depende de los detalles internos.
+
+
+## 3. Brevemente: ¿Por qué hay que ser conscientes y diseñar con cuidado la **interfaz pública** de una clase? ¿Es fácil cambiarla?
+
+Porque la interfaz pública es un contrato con el resto del programa.
+Cambiarla suele ser difícil y costoso, ya que:
+Afecta a todas las clases que la usan.
+Puede romper código existente.
+Por eso debe diseñarse con cuidado desde el principio.
+
+
+## 4. ¿Qué son las **invariantes de clase** y por qué la ocultación de información nos ayuda?
+
+Las invariantes de clase son condiciones que siempre deben cumplirse para que un objeto sea válido (por ejemplo, un radio no negativo).
+
+La ocultación ayuda porque:
+Impide cambios directos en los atributos.
+Obliga a modificar el estado solo mediante métodos controlados.
+Garantiza que las invariantes se mantengan siempre.
+
+
+## 5. Pon un ejemplo de una clase `Punto` en `Java`, con dos coordenadas, `x` e `y`, de tipo `double`, con un método `calcularDistanciaAOrigen`, y que haga uso de la ocultación de información. ¿Cuál es la interfaz pública de la clase `Punto`? ¿Qué significa `public` y `private`?
+
+public class Punto {
+    private double x;
+    private double y;
+
+    public Punto(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public double calcularDistanciaAOrigen() {
+        return Math.sqrt(x * x + y * y);
+    }
+}
+
+Interfaz pública:
+Punto(double x, double y)
+calcularDistanciaAOrigen()
+
+Significado:
+public: accesible desde cualquier clase.
+private: solo accesible dentro de la propia clase.
+
+
+## 6. En Java, ¿A quiénes se pueden aplicar los modificadores `public` o `private`?
+
+Se pueden aplicar a:
+Clases (solo public o sin modificador).
+Atributos.
+Métodos.
+Constructores.
+
+
+## 7. En POO, la visibilidad puede ser pública o privada, pero ¿existen más tipos de visibilidad? ¿Qué ocurre en Java? ¿Y en otros lenguajes?
+
+Sí. En Java existen:
+public
+private
+protected
+visibilidad por defecto (package-private)
+
+En otros lenguajes:
+C++: public, private, protected
+Python: convención con _ y __
+C#: public, private, protected, internal
+
+
+## 8. Responde: Los miembros de instancia privados de un objeto están ocultos para (a) otras clases o (b) otras instancias, aunque sean de la misma clase. Pon un ejemplo añadiendo un método `calcularDistanciaAPunto(Punto otro)` y explica la respuesta.
+
+Están ocultos para otras clases, pero no para otras instancias de la misma clase.
+
+Ejemplo:
+public double calcularDistanciaAPunto(Punto otro) {
+    double dx = this.x - otro.x;
+    double dy = this.y - otro.y;
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
+Aunque x e y son private, una instancia puede acceder a los atributos privados de otra instancia de la misma clase.
+
+
+## 9. ¿Qué son los métodos "getter" y "setter" en los lenguajes orientados a objetos?
+
+### Respuesta
+
+
+## 10. Cuando nos referimos a que la ocultación de información mejora la "seguridad" del programa, ¿nos referimos a que no pueda ser "hackeado"?
+
+### Respuesta
+
+
+## 11. ¿Qué diferencia hay entre **miembro de instancia** y **miembro de clase**? ¿Los miembros de clase también se pueden ocultar?
+
+### Respuesta
+
+
+## 12. Brevemente: ¿Tiene sentido que los constructores sean privados?
+
+### Respuesta
+
+
+## 13. ¿Cómo se indican los **miembros de clase** en Java? Pon un ejemplo, en la clase `Punto` definida anteriormente, para que incluya miembros de clase que permitan saber cuáles son los valores `x` e `y` máximos que se han establecido en todos los puntos que se hayan creado hasta el momento.
+
+### Respuesta
+
+
+## 14. Como sería un método factoría dentro de la clase `Punto` para construir un `Punto` a partir de dos coordenadas, pero que las redondee al entero más cercano. Escribe sólo el código del método, no toda la clase ¿Has usado `static`? 
+
+### Respuesta
+
+
+## 15. Cambia la implementación de `Punto`. En vez de dos `double`, emplea un array interno de dos posiciones, intentando no modificar la interfaz pública de la clase.
+
+### Respuesta
+
+
+## 16. Si un atributo va a tener un método "getter" y "setter" públicos, ¿no es mejor declararlo público? ¿Cuál es la convención más habitual sobre los atributos, que sean públicos o privados? ¿Tiene esto algo que ver con las "invariantes de clase"?
+
+### Respuesta
+
+
+## 17. ¿Qué significa que una clase sea **inmutable**? ¿qué es un método modificador? ¿Un método modificador es siempre un "setter"? ¿Tiene ventajas que una clase sea inmutable?
+
+### Respuesta
+
+
+## 18. ¿Es recomendable incluir métodos "setter" siempre y como convención?
+
+### Respuesta
+
+
+## 19. ¿La clase `String` en Java es mutable o inmutable? ¿Qué ocurre al concatenar dos cadenas? ¿Qué debemos hacer si vamos a hacer una operación que implique concatenar muchas veces para construir paso a paso una cadena muy larga?
+
+### Respuesta
+
+
+## 20. En POO ¿Cómo se comparan objetos de una misma clase? ¿Por su contenido o por su identidad? ¿Qué es el método equals en Java? ¿Qué hace por defecto? ¿Cómo se deben comparar dos cadenas en Java? 
+
+### Respuesta
+
+
+## 21. ¿Qué son las clases "wrapper" en un lenguaje de programación orientado a objetos? ¿Cómo se hace? ¿Es un proceso automático? ¿Qué ventajas tienen? ¿Todos los lenguajes orientados a objetos tienen tipos primitivos y necesitan wrappers? 
+
+### Respuesta
+
+
+## 22. ¿En POO qué es un **tipo de dato enumerado**? ¿En Java, un tipo de dato enumerado es una clase? ¿Qué ventajas tienen en términos de encapsulación los enumerados en Java?
+
+### Respuesta
+
+
+## 23. Crea un tipo enumerado en Java que se llame `Mes`, con doce posibles instancias y que además proporcione métodos para obtener cuántos días tiene ese mes, el ordinal de ese mes en el año (1-12), empleando atributos privados y constructores del tipo enumerado. Añade además cuatro métodos para devolver si ese mes tiene algunos días de invierno, primavera, verano u otoño, indicando con un booleano el hemisferio (norte o sur, parámetro `enHemisferioNorte`). Es decir: `esDePrimavera(boolean esHemisferioNorte)`, `esDeVerano(boolean esHemisferioNorte)`, `esDeOtoño(boolean esHemisferioNorte)`, `esDeInvierno(boolean esHemisferioNorte)`
+
+### Respuesta
