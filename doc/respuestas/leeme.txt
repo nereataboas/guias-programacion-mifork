@@ -321,62 +321,129 @@ Aunque x e y son private, una instancia puede acceder a los atributos privados d
 
 ## 9. ¿Qué son los métodos "getter" y "setter" en los lenguajes orientados a objetos?
 
-### Respuesta
+Getter: devuelve el valor de un atributo.
+Setter: modifica el valor de un atributo de forma controlada.
 
 
 ## 10. Cuando nos referimos a que la ocultación de información mejora la "seguridad" del programa, ¿nos referimos a que no pueda ser "hackeado"?
 
-### Respuesta
+No.
+Se refiere a la seguridad lógica del programa:
+Evitar estados inválidos.
+Prevenir usos incorrectos.
+Aumentar la robustez del código.
 
 
 ## 11. ¿Qué diferencia hay entre **miembro de instancia** y **miembro de clase**? ¿Los miembros de clase también se pueden ocultar?
 
-### Respuesta
+Miembro de instancia: pertenece a cada objeto.
+Miembro de clase (static): pertenece a la clase en sí.
+
+Sí, los miembros de clase también pueden ser private.
 
 
 ## 12. Brevemente: ¿Tiene sentido que los constructores sean privados?
 
-### Respuesta
+Sí, por ejemplo:
+En patrones Singleton.
+En métodos factoría.
+Para impedir la creación directa de objetos.
 
 
 ## 13. ¿Cómo se indican los **miembros de clase** en Java? Pon un ejemplo, en la clase `Punto` definida anteriormente, para que incluya miembros de clase que permitan saber cuáles son los valores `x` e `y` máximos que se han establecido en todos los puntos que se hayan creado hasta el momento.
 
-### Respuesta
+public class Punto {
+    private double x, y;
+    private static double maxX = Double.NEGATIVE_INFINITY;
+    private static double maxY = Double.NEGATIVE_INFINITY;
+
+    public Punto(double x, double y) {
+        this.x = x;
+        this.y = y;
+        if (x > maxX) maxX = x;
+        if (y > maxY) maxY = y;
+    }
+
+    public static double getMaxX() { return maxX; }
+    public static double getMaxY() { return maxY; }
+}
 
 
 ## 14. Como sería un método factoría dentro de la clase `Punto` para construir un `Punto` a partir de dos coordenadas, pero que las redondee al entero más cercano. Escribe sólo el código del método, no toda la clase ¿Has usado `static`? 
 
-### Respuesta
+public static Punto crearPuntoRedondeado(double x, double y) {
+    return new Punto(Math.round(x), Math.round(y));
+}
+
+Sí, usa static porque no depende de una instancia.
 
 
 ## 15. Cambia la implementación de `Punto`. En vez de dos `double`, emplea un array interno de dos posiciones, intentando no modificar la interfaz pública de la clase.
 
-### Respuesta
+public class Punto {
+    private double[] coord = new double[2];
 
+    public Punto(double x, double y) {
+        coord[0] = x;
+        coord[1] = y;
+    }
+
+    public double calcularDistanciaAOrigen() {
+        return Math.sqrt(coord[0]*coord[0] + coord[1]*coord[1]);
+    }
+}
+
+La interfaz pública no cambia.
 
 ## 16. Si un atributo va a tener un método "getter" y "setter" públicos, ¿no es mejor declararlo público? ¿Cuál es la convención más habitual sobre los atributos, que sean públicos o privados? ¿Tiene esto algo que ver con las "invariantes de clase"?
 
-### Respuesta
+Porque:
+Los getters/setters permiten validar datos.
+Mantienen las invariantes.
+Permiten cambiar la implementación interna.
+Convención habitual: atributos privados.
+
+Sí, está directamente relacionado con las invariantes de clase.
 
 
 ## 17. ¿Qué significa que una clase sea **inmutable**? ¿qué es un método modificador? ¿Un método modificador es siempre un "setter"? ¿Tiene ventajas que una clase sea inmutable?
 
-### Respuesta
+Una clase es inmutable si su estado no puede cambiar tras crearse.
 
+Método modificador: cambia el estado del objeto.
+No todo método modificador es un setter.
+
+Ventajas:
+Más segura.
+Más fácil de razonar.
+Thread-safe.
 
 ## 18. ¿Es recomendable incluir métodos "setter" siempre y como convención?
 
-### Respuesta
-
+No. Solo cuando:
+Tiene sentido modificar el atributo.
+No se rompen invariantes.
+Muchas clases no deberían tener setters.
 
 ## 19. ¿La clase `String` en Java es mutable o inmutable? ¿Qué ocurre al concatenar dos cadenas? ¿Qué debemos hacer si vamos a hacer una operación que implique concatenar muchas veces para construir paso a paso una cadena muy larga?
 
-### Respuesta
+String es inmutable.
+Al concatenar, se crea un nuevo objeto.
+Para muchas concatenaciones:
+Usar StringBuilder o StringBuffer.
 
 
 ## 20. En POO ¿Cómo se comparan objetos de una misma clase? ¿Por su contenido o por su identidad? ¿Qué es el método equals en Java? ¿Qué hace por defecto? ¿Cómo se deben comparar dos cadenas en Java? 
 
-### Respuesta
+Por identidad: ==
+Por contenido: equals
+
+En Java:
+equals por defecto compara referencias.
+Debe sobrescribirse para comparar contenido.
+
+Cadenas:
+cadena1.equals(cadena2)
 
 
 ## 21. ¿Qué son las clases "wrapper" en un lenguaje de programación orientado a objetos? ¿Cómo se hace? ¿Es un proceso automático? ¿Qué ventajas tienen? ¿Todos los lenguajes orientados a objetos tienen tipos primitivos y necesitan wrappers? 
