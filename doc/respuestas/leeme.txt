@@ -448,14 +448,131 @@ cadena1.equals(cadena2)
 
 ## 21. ¿Qué son las clases "wrapper" en un lenguaje de programación orientado a objetos? ¿Cómo se hace? ¿Es un proceso automático? ¿Qué ventajas tienen? ¿Todos los lenguajes orientados a objetos tienen tipos primitivos y necesitan wrappers? 
 
-### Respuesta
+Las clases wrapper (o clases envoltorio) son clases que encapsulan un tipo primitivo dentro de un objeto.
+
+En Java, por ejemplo:
+Tipo primitivo	       Clase Wrapper
+int	                    Integer
+double	                Double
+char	                Character
+boolean	                Boolean
+long	                Long
+float	                Float
+short	                Short
+byte	                Byte
+
+Un wrapper permite tratar un valor primitivo como un objeto.
+
+Hay dos formas de hacerlo:
+1.Manualmente
+Integer numero = new Integer(5);   // Forma antigua (ya no recomendada)
+2.Automáticamente (Autoboxing)
+Integer numero = 5;  // Autoboxing automático
+Y al revés:
+int n = numero;  // Unboxing automático
+Desde Java 5 el proceso es automático gracias al mecanismo de autoboxing y unboxing.
+
+Ventajas:
+Permiten usar tipos primitivos en estructuras que trabajan con objetos (por ejemplo ArrayList<Integer>).
+Proporcionan métodos útiles:
+Integer.parseInt("123");
+Double.compare(a, b);
+Permiten valores null (un primitivo no puede ser null).
+Son necesarios en el uso de genéricos en Java.
+
+No todos los lenguajes OO necesitan wrappers, depende del lenguaje:
+En Java sí existen primitivos separados de objetos.
+En C# también existen, pero el lenguaje integra mejor ambos conceptos.
+En Python no existen tipos primitivos reales: todo es objeto.
+En Ruby tampoco hay primitivos separados.
+Por tanto, no todos los lenguajes orientados a objetos necesitan wrappers. Solo aquellos que distinguen entre tipos primitivos y objetos.
 
 
 ## 22. ¿En POO qué es un **tipo de dato enumerado**? ¿En Java, un tipo de dato enumerado es una clase? ¿Qué ventajas tienen en términos de encapsulación los enumerados en Java?
 
-### Respuesta
+Un tipo enumerado (enum) es un tipo de dato que define un conjunto fijo y limitado de valores constantes
+
+En Java, un enum es en realidad una clase especial que:
+Extiende implícitamente de java.lang.Enum
+Puede tener:
+Atributos privados
+Constructores
+Métodos
+Implementar interfaces
+
+Por tanto, es mucho más potente que un simple conjunto de constantes.
+
+Ventajas en términos de encapsulación
+En Java, los enumerados:
+Permiten agrupar constantes relacionadas.
+Pueden tener comportamiento (métodos).
+Encapsulan datos asociados a cada constante.
+Evitan errores de valores inválidos.
+Son tipos seguros (type-safe).
 
 
 ## 23. Crea un tipo enumerado en Java que se llame `Mes`, con doce posibles instancias y que además proporcione métodos para obtener cuántos días tiene ese mes, el ordinal de ese mes en el año (1-12), empleando atributos privados y constructores del tipo enumerado. Añade además cuatro métodos para devolver si ese mes tiene algunos días de invierno, primavera, verano u otoño, indicando con un booleano el hemisferio (norte o sur, parámetro `enHemisferioNorte`). Es decir: `esDePrimavera(boolean esHemisferioNorte)`, `esDeVerano(boolean esHemisferioNorte)`, `esDeOtoño(boolean esHemisferioNorte)`, `esDeInvierno(boolean esHemisferioNorte)`
 
-### Respuesta
+public enum Mes {
+
+    ENERO(1, 31),
+    FEBRERO(2, 28),
+    MARZO(3, 31),
+    ABRIL(4, 30),
+    MAYO(5, 31),
+    JUNIO(6, 30),
+    JULIO(7, 31),
+    AGOSTO(8, 31),
+    SEPTIEMBRE(9, 30),
+    OCTUBRE(10, 31),
+    NOVIEMBRE(11, 30),
+    DICIEMBRE(12, 31);
+
+    private int ordinal;
+    private int dias;
+
+    private Mes(int ordinal, int dias) {
+        this.ordinal = ordinal;
+        this.dias = dias;
+    }
+
+    public int getDias() {
+        return dias;
+    }
+
+    public int getOrdinal() {
+        return ordinal;
+    }
+
+    public boolean esDePrimavera(boolean esHemisferioNorte) {
+        if (esHemisferioNorte) {
+            return this == MARZO || this == ABRIL || this == MAYO;
+        } else {
+            return this == SEPTIEMBRE || this == OCTUBRE || this == NOVIEMBRE;
+        }
+    }
+
+    public boolean esDeVerano(boolean esHemisferioNorte) {
+        if (esHemisferioNorte) {
+            return this == JUNIO || this == JULIO || this == AGOSTO;
+        } else {
+            return this == DICIEMBRE || this == ENERO || this == FEBRERO;
+        }
+    }
+
+    public boolean esDeOtoño(boolean esHemisferioNorte) {
+        if (esHemisferioNorte) {
+            return this == SEPTIEMBRE || this == OCTUBRE || this == NOVIEMBRE;
+        } else {
+            return this == MARZO || this == ABRIL || this == MAYO;
+        }
+    }
+
+    public boolean esDeInvierno(boolean esHemisferioNorte) {
+        if (esHemisferioNorte) {
+            return this == DICIEMBRE || this == ENERO || this == FEBRERO;
+        } else {
+            return this == JUNIO || this == JULIO || this == AGOSTO;
+        }
+    }
+}
