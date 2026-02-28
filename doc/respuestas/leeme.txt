@@ -745,45 +745,170 @@ Solo se ejecuta un único catch: el primero compatible con la excepción lanzada
 
 ## 9. Si las excepciones producen rupturas en el código llamador, ¿cómo podemos garantizar que se ejecuta siempre finalmente un código necesario para cierre de ficheros, liberacion de recursos, antes de que continúe propagándose la excepción? Pon un ejemplo en Java con `finally`, tanto con `catch` como sin él.
 
-### Respuesta
+finally se ejecuta siempre (salvo fallo grave del sistema).
+
+Con catch
+try {
+    int x = 5 / 0;
+} catch (ArithmeticException e) {
+    System.out.println("Error matemático");
+} finally {
+    System.out.println("Siempre se ejecuta");
+}
+
+Sin catch
+try {
+    int x = 5 / 0;
+} finally {
+    System.out.println("Cerrar recursos");
+}
+Aquí la excepción se propaga después del finally.
 
 
 ## 10. En Java, el bloque `finally` puede ir sin `catch`? ¿Se ejecuta siempre tanto si ocurre como si no ocurre una excepción? ¿Y si hay un `return` en medio del `try`?
 
-### Respuesta
+Sí.
+¿Se ejecuta siempre?
+✔ Sí, incluso si hay excepción.
+✔ Sí, incluso si hay return.
+
+Ejemplo:
+public static int prueba() {
+    try {
+        return 5;
+    } finally {
+        System.out.println("Se ejecuta antes de salir");
+    }
+}
 
 
 ## 11. En Java, qué son las excepciones **"controladas"** y las **"no controladas"**? ¿Qué papel juega `RuntimeException`? Pon un ejemplo de excepciones típicas controladas y no controladas que incluso nosotros mismos podríamos usar. Haz dos listas con 3 o 4 ejemplos de situación donde se suele preferir una excepción controlada y donde se suele preferir una excepción no controlada.
 
-### Respuesta
+En Java:
+Controladas (checked) → heredan de Exception (pero no de RuntimeException)
+No controladas (unchecked) → heredan de RuntimeException
+
+Papel de RuntimeException
+Es la base de las excepciones que no obligan a capturar ni declarar.
+
+Ejemplos controladas
+IOException
+FileNotFoundException
+SQLException
+ParseException
+
+Situaciones típicas:
+Acceso a fichero
+Conexión base de datos
+Lectura red
+Parsing externo
+
+Ejemplos no controladas
+IllegalArgumentException
+NullPointerException
+ArithmeticException
+IndexOutOfBoundsException
+
+Situaciones típicas:
+Parámetro inválido
+Error lógico del programador
+División por cero
+Índice incorrecto
 
 
 ## 12. ¿Qué es y para qué se usa `throws`? ¿Por qué es alternativa a capturar una excepción controlada?
 
-### Respuesta
+Indica que un método declara que puede lanzar una excepción y no la gestiona.
+public void metodo() throws IOException
+
+Es alternativa a capturarla: se deja que la gestione el llamador.
 
 
 ## 13. Pon un ejemplo en Java de firma de método que incluya `throws`, de una función que abre un fichero pero que declara que no le interesa menejar la excepción de si el fichero no existe, sino que se propague hacia arriba. Eso sí, acuérdate del `finally`.
 
-### Respuesta
+import java.io.*;
+
+public static void leerFichero() throws IOException {
+    FileReader fr = null;
+    try {
+        fr = new FileReader("datos.txt");
+        System.out.println("Fichero abierto");
+    } finally {
+        if (fr != null) {
+            fr.close();
+        }
+    }
+}
+
+Aquí no se captura la excepción, se propaga.
 
 
 ## 14. ¿Podemos poner en `throws` excepciones no controladas, como `RuntimeException`? ¿Debería el método llamador entonces poner `try-catch` en ese caso? ¿Qué sentido tendría?
 
-### Respuesta
+public void metodo() throws IllegalArgumentException
+
+Pero no es obligatorio capturarlas.
+
+¿Sentido?
+Documentación
+Claridad contractual del método
 
 
 ## 15. ¿Cuándo se recomienda usar excepciones controladas, como `IOException`, y cuándo no controladas como `IllegalArgumentException`? ¿Existen en todos los lenguajes ambas opciones? En los que sólo existe una opción, ¿cuál es la más habitual?
 
-### Respuesta
+Controladas
+Cuando el error es recuperable:
+Fallo externo
+Entrada/salida
+Recursos externos
+
+No controladas
+Cuando es error de programación:
+Parámetro inválido
+Estado inconsistente
+Violación de precondiciones
+
+No todos los lenguajes distinguen.
+En la mayoría moderna (Python, C#, C++) predominan las no obligatorias.
 
 
 ## 16. ¿Tiene sentido lanzar excepciones dentro del `catch`? ¿Se puede relanzar la misma excepción capturada? ¿Cuándo tendría sentido hacer esto último? Pon ejemplos de ambos casos.
 
-### Respuesta
+try {
+    leer();
+} catch (IOException e) {
+    throw new RuntimeException("Error alto nivel", e);
+}
+Relanzar la misma
+catch (IOException e) {
+    System.out.println("Registrando error...");
+    throw e;
+}
+
+Tiene sentido cuando:
+Se quiere registrar
+Añadir contexto
+No se puede resolver en ese nivel
 
 
 ## 17. ¿En qué consiste que una excepción sea la **"causa"** de otra excepción? Pon un ejemplo en Java, donde capturemos una excepción de bajo nivel y la encapsulemos en otra personalizada de alto nivel. Cuando una excepción sale por pantalla y tiene una causa, ¿se ve?
 
-### Respuesta
+Una excepción puede envolver otra:
 
+class ErrorCalculoException extends Exception {
+    public ErrorCalculoException(String msg, Throwable causa) {
+        super(msg, causa);
+    }
+}
+try {
+    double r = calc.raiz(-5);
+} catch (IllegalArgumentException e) {
+    throw new ErrorCalculoException("Error en cálculo avanzado", e);
+}
+
+Cuando se imprime:
+
+ErrorCalculoException: Error en cálculo avanzado
+Caused by: IllegalArgumentException: Número negativo
+
+Sí, la causa aparece en el stack trace.
